@@ -7,7 +7,8 @@ export default function Counter() {
   const incremento = 5;
 
   function calcoloIncremento(){
-    setCount(count + incremento);  // ← Basta questo!
+    let newCount = count + incremento
+    setCount(newCount);  // ← Basta questo!
   }
   
   return (
