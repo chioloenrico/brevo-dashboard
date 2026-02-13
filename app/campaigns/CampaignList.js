@@ -12,10 +12,10 @@ function getCampaignMetrics(campaign) {
   if (campaign.status !== 'sent' || !campaign.stats) {
     return { deliveryRate: null, openRate: null, clickRate: null }
   }
-  const { sent = 0, delivered = 0, opened = 0, clicked = 0 } = campaign.stats
+  const { sent = 0, delivered = 0, viewed = 0, clickers = 0 } = campaign.stats
   const deliveryRate = sent > 0 ? delivered / sent : null
-  const openRate = delivered > 0 ? opened / delivered : null
-  const clickRate = delivered > 0 ? clicked / delivered : null
+  const openRate = delivered > 0 ? viewed / delivered : null
+  const clickRate = delivered > 0 ? clickers / delivered : null
   return { deliveryRate, openRate, clickRate }
 }
 

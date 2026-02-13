@@ -1,5 +1,6 @@
 import CampaignList from './CampaignList'
 import CampaignStatsHeader from './CampaignStatsHeader'
+import { fetchCampaigns } from '../../lib/brevo/fetchCampaigns.js'
 
 function calculateAggregateMetrics(campaigns) {
   // Filtra solo campagne inviate con statistiche disponibili
@@ -18,21 +19,21 @@ function calculateAggregateMetrics(campaigns) {
   // Calcola totali
   let totalSent = 0
   let totalDelivered = 0
-  let totalOpened = 0
-  let totalClicked = 0
+  let totalViewed = 0
+  let totalClickers = 0
 
   sentCampaigns.forEach(campaign => {
-    const { sent, delivered, opened, clicked } = campaign.stats
+    const { sent, delivered, viewed, clickers } = campaign.stats
     totalSent += sent || 0
     totalDelivered += delivered || 0
-    totalOpened += opened || 0
-    totalClicked += clicked || 0
+    totalViewed += viewed || 0
+    totalClickers += clickers || 0
   })
 
   // Calcola percentuali
   const deliveryRate = totalSent > 0 ? totalDelivered / totalSent : 0
-  const openRate = totalDelivered > 0 ? totalOpened / totalDelivered : 0
-  const clickRate = totalDelivered > 0 ? totalClicked / totalDelivered : 0
+  const openRate = totalDelivered > 0 ? totalViewed / totalDelivered : 0
+  const clickRate = totalDelivered > 0 ? totalClickers / totalDelivered : 0
 
   return {
     deliveryRate,
@@ -41,45 +42,31 @@ function calculateAggregateMetrics(campaigns) {
   }
 }
 
-export default function CampaignsPage() {
-  // TODO: qui fetcheremo da Brevo
-  const mockCampaigns = [
-    { 
-      id: 1, 
-      name: "Welcome Email", 
-      status: "sent",
-      stats: {
-        sent: 1000,
-        delivered: 980,
-        opened: 245,
-        clicked: 32
-      }
-    },
-    { 
-      id: 2, 
-      name: "Newsletter Marzo", 
-      status: "draft"
-    },
-    {
-      id: 3,
-      name: "Promo Estate",
-      status: "sent",
-      stats: {
-        sent: 500,
-        delivered: 485,
-        opened: 121,
-        clicked: 15
-      }
-    }
-  ]
+export default async function CampaignsPage() {
+  let campaigns = []
+  let error = null
 
-  const aggregateMetrics = calculateAggregateMetrics(mockCampaigns)
+  try {
+    campaigns = await fetchCampaigns()
+  } catch (err) {
+    error = err.message || 'Errore nel recupero delle campagne'
+    console.error('Error fetching campaigns:', err)
+  }
+
+  const aggregateMetrics = calculateAggregateMetrics(campaigns)
   
   return (
     <div>
       <h1 className="text-2xl font-light mb-6">Le mie Campagne</h1>
+      {error ? (
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+          <p className="text-red-800 dark:text-red-200">
+            <strong>Errore:</strong> {error}
+          </p>
+        </div>
+      ) : null}
       <CampaignStatsHeader metrics={aggregateMetrics} />
-      <CampaignList campaigns={mockCampaigns} />
+      <CampaignList campaigns={campaigns} />
     </div>
   )
 }
