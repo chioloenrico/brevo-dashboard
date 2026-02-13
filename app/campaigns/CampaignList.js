@@ -8,15 +8,19 @@ function formatPercentage(value) {
   }).format(value)
 }
 
+function formatCount(value) {
+  return new Intl.NumberFormat('it-IT').format(value)
+}
+
 function getCampaignMetrics(campaign) {
   if (campaign.status !== 'sent' || !campaign.stats) {
-    return { deliveryRate: null, openRate: null, clickRate: null }
+    return { deliveryRate: null, openRate: null, clickRate: null, viewed: null, uniqueClicks: null, uniqueViews: null, unsubscriptions: null }
   }
-  const { sent = 0, delivered = 0, viewed = 0, clickers = 0 } = campaign.stats
+  const { sent = 0, delivered = 0, viewed = 0, clickers = 0, uniqueClicks = 0, uniqueViews = 0, unsubscriptions = 0 } = campaign.stats
   const deliveryRate = sent > 0 ? delivered / sent : null
   const openRate = delivered > 0 ? viewed / delivered : null
   const clickRate = delivered > 0 ? clickers / delivered : null
-  return { deliveryRate, openRate, clickRate }
+  return { deliveryRate, openRate, clickRate, viewed, uniqueClicks, uniqueViews, unsubscriptions }
 }
 
 function StatusBadge({ status }) {
@@ -73,6 +77,30 @@ export default function CampaignList({ campaigns }) {
             >
               Click Rate
             </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-right text-xs font-medium text-foreground/70 uppercase tracking-wider"
+            >
+              Viewed
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-right text-xs font-medium text-foreground/70 uppercase tracking-wider"
+            >
+              Unique Clicks
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-right text-xs font-medium text-foreground/70 uppercase tracking-wider"
+            >
+              Unique Views
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-right text-xs font-medium text-foreground/70 uppercase tracking-wider"
+            >
+              Unsubscriptions
+            </th>
           </tr>
         </thead>
         <tbody className="bg-background divide-y divide-foreground/10">
@@ -106,6 +134,26 @@ export default function CampaignList({ campaigns }) {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground text-right">
                   {metrics.clickRate !== null
                     ? formatPercentage(metrics.clickRate)
+                    : '-'}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground text-right">
+                  {metrics.viewed !== null
+                    ? formatCount(metrics.viewed)
+                    : '-'}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground text-right">
+                  {metrics.uniqueClicks !== null
+                    ? formatCount(metrics.uniqueClicks)
+                    : '-'}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground text-right">
+                  {metrics.uniqueViews !== null
+                    ? formatCount(metrics.uniqueViews)
+                    : '-'}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground text-right">
+                  {metrics.unsubscriptions !== null
+                    ? formatCount(metrics.unsubscriptions)
                     : '-'}
                 </td>
               </tr>

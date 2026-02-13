@@ -12,7 +12,11 @@ function calculateAggregateMetrics(campaigns) {
     return {
       deliveryRate: 0,
       openRate: 0,
-      clickRate: 0
+      clickRate: 0,
+      totalViewed: 0,
+      totalUniqueClicks: 0,
+      totalUniqueViews: 0,
+      totalUnsubscriptions: 0
     }
   }
 
@@ -21,13 +25,19 @@ function calculateAggregateMetrics(campaigns) {
   let totalDelivered = 0
   let totalViewed = 0
   let totalClickers = 0
+  let totalUniqueClicks = 0
+  let totalUniqueViews = 0
+  let totalUnsubscriptions = 0
 
   sentCampaigns.forEach(campaign => {
-    const { sent, delivered, viewed, clickers } = campaign.stats
+    const { sent, delivered, viewed, clickers, uniqueClicks, uniqueViews, unsubscriptions } = campaign.stats
     totalSent += sent || 0
     totalDelivered += delivered || 0
     totalViewed += viewed || 0
     totalClickers += clickers || 0
+    totalUniqueClicks += uniqueClicks || 0
+    totalUniqueViews += uniqueViews || 0
+    totalUnsubscriptions += unsubscriptions || 0
   })
 
   // Calcola percentuali
@@ -38,7 +48,11 @@ function calculateAggregateMetrics(campaigns) {
   return {
     deliveryRate,
     openRate,
-    clickRate
+    clickRate,
+    totalViewed,
+    totalUniqueClicks,
+    totalUniqueViews,
+    totalUnsubscriptions
   }
 }
 

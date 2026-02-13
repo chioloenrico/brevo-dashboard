@@ -12,11 +12,11 @@ The system SHALL display campaigns in an HTML table structure using native table
 - **THEN** the system SHALL enable horizontal scrolling by wrapping the table in a container with `overflow-x-auto` class
 
 ### Requirement: Display table columns for campaign information
-The system SHALL display five columns in the table: Nome (Name), Status, Delivery Rate, Open Rate, and Click Rate. Each column SHALL have a header in the table's `<thead>` section.
+The system SHALL display nine columns in the table: Nome (Name), Status, Delivery Rate, Open Rate, Click Rate, Viewed, Unique Clicks, Unique Views, and Unsubscriptions. Each column SHALL have a header in the table's `<thead>` section.
 
 #### Scenario: All required columns are displayed
 - **WHEN** the campaigns table is rendered
-- **THEN** the system SHALL display column headers for "Nome", "Status", "Delivery Rate", "Open Rate", and "Click Rate" in the table header
+- **THEN** the system SHALL display column headers for "Nome", "Status", "Delivery Rate", "Open Rate", "Click Rate", "Viewed", "Unique Clicks", "Unique Views", and "Unsubscriptions" in the table header
 
 #### Scenario: Campaign name appears in first column
 - **WHEN** a campaign row is rendered
@@ -105,5 +105,35 @@ The system SHALL align text content to the left and numeric content (percentages
 - **THEN** the system SHALL align the content to the left
 
 #### Scenario: Numeric columns are right-aligned
-- **WHEN** displaying Delivery Rate, Open Rate, and Click Rate columns
-- **THEN** the system SHALL align the percentage values to the right
+- **WHEN** displaying Delivery Rate, Open Rate, Click Rate, Viewed, Unique Clicks, Unique Views, and Unsubscriptions columns
+- **THEN** the system SHALL align the numeric values to the right
+
+### Requirement: Display absolute count columns for detailed engagement metrics
+The system SHALL display four additional columns (Viewed, Unique Clicks, Unique Views, Unsubscriptions) showing absolute count values from the campaign's `stats` object. Values SHALL be formatted as locale-aware numbers using `Intl.NumberFormat` with the `it-IT` locale.
+
+#### Scenario: Display viewed count from campaign stats
+- **WHEN** a campaign has `status: 'sent'` and `stats` object with a `viewed` value
+- **THEN** the system SHALL display the `stats.viewed` value formatted as a locale-aware number in the Viewed column
+
+#### Scenario: Display unique clicks count from campaign stats
+- **WHEN** a campaign has `status: 'sent'` and `stats` object with a `uniqueClicks` value
+- **THEN** the system SHALL display the `stats.uniqueClicks` value formatted as a locale-aware number in the Unique Clicks column
+
+#### Scenario: Display unique views count from campaign stats
+- **WHEN** a campaign has `status: 'sent'` and `stats` object with a `uniqueViews` value
+- **THEN** the system SHALL display the `stats.uniqueViews` value formatted as a locale-aware number in the Unique Views column
+
+#### Scenario: Display unsubscriptions count from campaign stats
+- **WHEN** a campaign has `status: 'sent'` and `stats` object with an `unsubscriptions` value
+- **THEN** the system SHALL display the `stats.unsubscriptions` value formatted as a locale-aware number in the Unsubscriptions column
+
+### Requirement: Handle missing data for detailed engagement columns
+The system SHALL display "-" for the Viewed, Unique Clicks, Unique Views, and Unsubscriptions columns when a campaign does not have statistics available, when the `stats` object is missing, or when campaign status is not 'sent'.
+
+#### Scenario: Display dash for new metric columns when stats are missing
+- **WHEN** a campaign does not have a `stats` object
+- **THEN** the system SHALL display "-" for Viewed, Unique Clicks, Unique Views, and Unsubscriptions columns
+
+#### Scenario: Display dash for new metric columns when status is not sent
+- **WHEN** a campaign has `status: 'draft'` or `status: 'scheduled'`
+- **THEN** the system SHALL display "-" for Viewed, Unique Clicks, Unique Views, and Unsubscriptions columns
