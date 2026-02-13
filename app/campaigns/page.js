@@ -1,6 +1,6 @@
 import CampaignList from './CampaignList'
 import CampaignStatsHeader from './CampaignStatsHeader'
-import { fetchCampaigns } from '../../lib/brevo/fetchCampaigns.js'
+import { getCampaigns } from '../../lib/repositories/campaigns.js'
 
 function calculateAggregateMetrics(campaigns) {
   // Filtra solo campagne inviate con statistiche disponibili
@@ -61,7 +61,7 @@ export default async function CampaignsPage() {
   let error = null
 
   try {
-    campaigns = await fetchCampaigns()
+    campaigns = await getCampaigns()
   } catch (err) {
     error = err.message || 'Errore nel recupero delle campagne'
     console.error('Error fetching campaigns:', err)
