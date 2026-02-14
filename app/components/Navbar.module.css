@@ -1,0 +1,38 @@
+.navbar {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #ffffff;
+}
+
+.navLink {
+  text-decoration: none;
+  color: #6b7280;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  font-family: var(--font-geist-sans);
+}
+
+.navLink:hover {
+  color: #1f2937;
+  background-color: #f9fafb;
+}
+
+.navLink:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.navLink:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.navLink.active {
+  color: #1f2937;
+  background-color: #f3f4f6;
+  font-weight: 600;
+}
